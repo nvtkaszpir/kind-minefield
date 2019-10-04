@@ -15,6 +15,8 @@ pipeline {
     disableConcurrentBuilds()
     ansiColor('xterm')
     timestamps() // breaks ansiColor plugin
+    lock resource: 'kind-cluster'
+
   }
 
   // notice that parameters are dynamically updated in first stage
