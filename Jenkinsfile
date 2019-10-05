@@ -49,7 +49,7 @@ pipeline {
 
         kind version
         kind delete cluster || true
-        kind create cluster --config kind-config.yaml --image "kindest/node:v1.13.10"
+        kind create cluster --config kind-config.yaml --image "kindest/node:v1.13.10" --wait 5m
 
         '''
         // export KUBECONFIG env var used later by kind and kubectl
@@ -91,7 +91,7 @@ pipeline {
        docker {
         label "k8s"
         image 'alpine/helm:2.13.1'
-        args '--network=host -v ${HOME}/.kube:/tmp/.kube:ro -e KUBECONFIG=/tmp/.kube/kind-config-kind -e HELM_HOME=/tmp --entrypoint="" '
+        args '--network=host -v ${HOME}/.kube:/tmp/.kube:ro -e KUBECONFIG=/tmp/.kube/kind-config-kind -e HELM_HOME=/tmp/.helm --entrypoint="" '
       }
     }
 
