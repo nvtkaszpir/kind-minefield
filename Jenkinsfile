@@ -75,11 +75,27 @@ pipeline {
       }
     }
 
-    stage('k8s / helm'){
+    stage('k8s'){
       steps {
         sh '''
 
         kubectl apply -f provision/kubectl/
+
+        '''
+      }
+    }
+
+    stage('helm'){
+      agent {
+         docker {
+          image 'alpine/helm:2.13.1'
+          args '-v ~/.kube:/root/.kube -v ~/.helm:/root/.helm' 
+        }
+      }
+
+      steps {
+        sh '''
+
         helm init --service-account tiller --wait
         helm version
 
