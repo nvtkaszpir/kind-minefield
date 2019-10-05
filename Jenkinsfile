@@ -88,17 +88,21 @@ pipeline {
 
     stage('helm'){
       agent {
-       docker {
-        label 'k8s'
-        image 'alpine/helm:2.13.1'
-        args '--network=host -v ${HOME}/.kube:/tmp/.kube:ro -e HELM_HOME=/tmp/.helm --entrypoint="" '
+        docker {
+          label 'k8s'
+          image 'alpine/helm:2.13.1'
+          args '--network=host -v ${HOME}/.kube:/tmp/.kube:ro --entrypoint="" '
+        }
       }
-    }
+      environment {
+        KUBECONFIG='/tmp/.kube/kind-config-kind'
+        HELM_HOME='/tmp/.helm'
+      }
 
     steps {
       sh '''
 
-      export KUBECONFIG=/tmp/.kube/kind-config-kind
+      #export KUBECONFIG=/tmp/.kube/kind-config-kind
       env
       export
       
