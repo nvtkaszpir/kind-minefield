@@ -91,7 +91,7 @@ pipeline {
        docker {
         label "k8s"
         image 'alpine/helm:2.13.1'
-        args '-v ~/.kube:/root/.kube -v ~/.helm:/root/.helm'
+        args '-v ${HOME}/.kube:/root/.kube -v ${HOME}/.helm:/root/.helm'
       }
     }
 
