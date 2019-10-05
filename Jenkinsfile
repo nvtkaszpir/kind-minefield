@@ -99,33 +99,32 @@ pipeline {
         HELM_HOME='/tmp/.helm'
       }
 
-    steps {
-      sh '''
+      steps {
+        sh '''
 
-      #export KUBECONFIG=/tmp/.kube/kind-config-kind
-      env
-      export
-      
-      helm init --service-account tiller --wait
-      helm version
+        env
+        export
+        
+        helm init --service-account tiller --wait
+        helm version
 
-      '''
+        '''
+      }
+
     }
 
+
   }
 
 
-}
+  post {
+    always {
+      sh '''
+      kind delete cluster || true
+      '''
 
-
-post {
-  always {
-    sh '''
-    kind delete cluster || true
-    '''
-
-    archiveArtifacts allowEmptyArchive: true,  artifacts: '**/reports/*', excludes: '**/*.gitkeep', fingerprint: true
-    deleteDir()
+      archiveArtifacts allowEmptyArchive: true,  artifacts: '**/reports/*', excludes: '**/*.gitkeep', fingerprint: true
+      deleteDir()
+    }
   }
-}
 }
