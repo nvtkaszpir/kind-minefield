@@ -8,7 +8,7 @@ Jenkins multibranch job for kind-minefiled
 
 pipeline {
 
-  agent { label "k8s"}
+  agent { label 'k8s' }
 
   options {
     timeout(time: 1, unit: 'HOURS')
@@ -89,15 +89,16 @@ pipeline {
     stage('helm'){
       agent {
        docker {
-        label "k8s"
+        label 'k8s'
         image 'alpine/helm:2.13.1'
-        args '--network=host -v ${HOME}/.kube:/tmp/.kube:ro -e KUBECONFIG=/tmp/.kube/kind-config-kind -e HELM_HOME=/tmp/.helm --entrypoint="" '
+        args '--network=host -v ${HOME}/.kube:/tmp/.kube:ro -e HELM_HOME=/tmp/.helm --entrypoint="" '
       }
     }
 
     steps {
       sh '''
 
+      export KUBECONFIG=/tmp/.kube/kind-config-kind
       env
       export
       
@@ -106,6 +107,7 @@ pipeline {
 
       '''
     }
+
   }
 
 
@@ -115,7 +117,7 @@ pipeline {
 post {
   always {
     sh '''
-    kind delete cluster
+    kind delete cluster || true
     '''
 
     archiveArtifacts allowEmptyArchive: true,  artifacts: '**/reports/*', excludes: '**/*.gitkeep', fingerprint: true
