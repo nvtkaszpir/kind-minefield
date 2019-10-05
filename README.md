@@ -7,5 +7,5 @@ Testing minefiled rok kubernetes-in-docker.
 ## Requirements
 
 - docker
-- kind
+- kind v0.5.1
 - kubectl

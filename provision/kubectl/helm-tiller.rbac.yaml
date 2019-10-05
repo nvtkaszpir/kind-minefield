@@ -1,0 +1,44 @@
+# minimal helm + tiller on k8s with RBAC
+#
+# if you spawn new k8s cluster with RBAC
+# and you wish to use helm, then you must
+# create new cluster role binding to assign it to tiller
+# so that tiller can perform tasks on the cluster.
+#
+# WARNING:
+# This example code grants tiller cluster-admin rights in kube-system
+# namespace, which means it can do anything on the cluster.
+#
+# on fresh cluster:
+# kubectl create -f helm-tiller.rbac.yaml
+#
+# on broken cluster:
+# kubectl delete -f helm-tiller.rbac.yaml || true
+# kubectl create -f helm-tiller.rbac.yaml
+#
+# after that you can invoke
+# helm init --service-account tiller --upgrade
+#
+# you can achieve the same by running:
+# kubectl --namespace kube-system create serviceaccount tiller
+# kubectl create clusterrolebinding tiller-clusterrolebinding --clusterrole cluster-admin --serviceaccount=kube-system:tiller
+# helm init --service-account tiller --upgrade
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tiller
+  namespace: kube-system
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: tiller-clusterrolebinding
+subjects:
+  - kind: ServiceAccount
+    name: tiller
+    namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: ""

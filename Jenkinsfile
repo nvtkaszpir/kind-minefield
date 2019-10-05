@@ -46,8 +46,12 @@ pipeline {
     stage('KinD up'){
       steps {
         sh '''
-        kind create cluster
+
+        kind version
+        kind create cluster --config kind-config.yaml --image "kindest/node:v1.13.10"
+
         '''
+        // export KUBECONFIG env var used later by kind and kubectl
         script {
           env.KUBECONFIG = sh(
             returnStdout: true,
@@ -60,8 +64,25 @@ pipeline {
     stage('KinD info'){
       steps {
         sh '''
+
         export | sort
+
         kubectl cluster-info
+        kubectl get nodes
+        kubectl get pods -A
+
+        '''
+      }
+    }
+
+    stage('k8s / helm'){
+      steps {
+        sh '''
+
+        kubectl apply -f provision/kubectl/
+        helm init --service-account tiller --wait
+        helm version
+
         '''
       }
     }
