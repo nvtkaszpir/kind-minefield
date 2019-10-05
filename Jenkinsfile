@@ -91,7 +91,7 @@ pipeline {
        docker {
         label "k8s"
         image 'alpine/helm:2.13.1'
-        args '-v ${HOME}/.kube:/root/.kube:rw,z -v ${HOME}/.helm:/root/.helm:rw,z --entrypoint="" '
+        args '--network=host -v ${HOME}/.kube:/tmp/.kube:ro -e KUBECONFIG=/tmp/.kube/kind-config-kind -e HELM_HOME=/tmp --entrypoint="" '
       }
     }
 
