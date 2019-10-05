@@ -48,6 +48,7 @@ pipeline {
         sh '''
 
         kind version
+        kind delete cluster || true
         kind create cluster --config kind-config.yaml --image "kindest/node:v1.13.10"
 
         '''
