@@ -87,34 +87,35 @@ pipeline {
 
     stage('helm'){
       agent {
-         docker {
-          image 'alpine/helm:2.13.1'
-          args '-v ~/.kube:/root/.kube -v ~/.helm:/root/.helm' 
-        }
-      }
-
-      steps {
-        sh '''
-
-        helm init --service-account tiller --wait
-        helm version
-
-        '''
+       docker {
+        label "k8s"
+        image 'alpine/helm:2.13.1'
+        args '-v ~/.kube:/root/.kube -v ~/.helm:/root/.helm'
       }
     }
 
-
-  }
-
-
-  post {
-    always {
+    steps {
       sh '''
-      kind delete cluster
-      '''
 
-      archiveArtifacts allowEmptyArchive: true,  artifacts: '**/reports/*', excludes: '**/*.gitkeep', fingerprint: true
-      deleteDir()
+      helm init --service-account tiller --wait
+      helm version
+
+      '''
     }
   }
+
+
+}
+
+
+post {
+  always {
+    sh '''
+    kind delete cluster
+    '''
+
+    archiveArtifacts allowEmptyArchive: true,  artifacts: '**/reports/*', excludes: '**/*.gitkeep', fingerprint: true
+    deleteDir()
+  }
+}
 }
