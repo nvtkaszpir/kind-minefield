@@ -98,6 +98,9 @@ pipeline {
     steps {
       sh '''
 
+      env
+      export
+      
       helm init --service-account tiller --wait
       helm version
 
