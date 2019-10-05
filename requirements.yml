@@ -1,0 +1,11 @@
+# this is ansible-galaxy dependencies files
+# use it as:
+# ansible-galaxy install -r requirements.yml
+
+---
+- src: geerlingguy.docker
+  version: 2.5.2
+- src: andrewrothstein.kind
+  version: v1.0.0
+- src: andrewrothstein.kubectl
+  version: v1.1.27
