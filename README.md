@@ -2,10 +2,16 @@
 
 ## About
 
-Testing minefiled rok kubernetes-in-docker.
+Testing repo for kubernetes-in-docker.
+
+Warning: this is not ready for production, use at your own risk.
 
 ## Requirements
 
+Jenkins node should have packages for:
+
 - docker
-- kind v0.5.1
+- kind
 - kubectl
+
+See `requirements.yml` for ansible-galaxy roles.
